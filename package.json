@@ -1,0 +1,30 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "\"# Learning-Node-js\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akash981616/Learning-Node-js.git"
+  },
+  "author": "Akash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akash981616/Learning-Node-js/issues"
+  },
+  "homepage": "https://github.com/Akash981616/Learning-Node-js#readme",
+  "dependencies": {
+    "color": "^4.2.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.9.2"
+  },
+  "devDependencies": {
+    "nodemo": "^1.0.0"
+  }
+}
