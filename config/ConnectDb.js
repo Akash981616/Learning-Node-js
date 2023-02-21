@@ -3,7 +3,7 @@ const color = require("color");
 const ConnectDb = async () => {
   try {
     await mongoose.set("strictQuery", false);
-    const conn = await mongoose.connect("mongodb://localhost:27017/Todo", {
+    const conn = await mongoose.connect("mongodb://localhost:27017/LenDen", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
