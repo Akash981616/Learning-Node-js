@@ -1,62 +1,68 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const generateToken = require("../config/generateToken");
+//register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, pic } = req.body;
+  const { name, email, password, pic, roles } = req.body;
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please Enter all the Feilds");
   }
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email }).exec();
   if (userExists) {
-    res.status(400);
+    res.status(409); //conflict
     throw new Error("User already exists");
   }
-  const user = await User.create({
-    name,
-    email,
-    password,
-    pic,
-  });
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(hashedPassword);
+  const newUser = {
+    name: name,
+    email: email,
+    password: hashedPassword,
+    pic: pic,
+    roles: roles,
+    refreshToken: generateToken({
+      UserInfo: {
+        name: name,
+        roles: roles,
+      },
+    }),
+  };
+  const user = await User.create(newUser);
+
   if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    });
+    res.status(201).json(user);
   } else {
     res.status(400);
     throw new Error("User not found");
   }
 });
+
+//User Authenticate
 const AuthenticateUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
   if (!email || !password) {
-    res.status(401).json("User Not Found");
   }
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).exec();
   console.log(user);
-  if (user && user.password == password) {
-    res
-      .json({ id: user._id, name: user.name, email: user.email, img: user.img })
-      .status(200);
+  if (!user) res.status(401).json("User Not Found");
+  const match = await bcrypt.compare(password, user.password);
+
+  if (match) {
+    //res.json({ id: user._id, name: user.name, email: user.email, img: user.img })
+    res.json(user).status(200);
   } else {
     res.status(401);
     throw new Error("Invalid Email or Password");
   }
 });
-const searchUser = asyncHandler(async (req, res) => {
-  console.log(req.query);
-  const keyword = req.query.search
-    ? {
-        $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { email: { $regex: req.query.search, $options: "i" } },
-        ],
-      }
-    : {};
 
-  const users = await User.find();
-  // .find({ _id: { $ne: req.user._id } });
-  res.send(users);
+//search User
+const searchUser = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.send(users).statusCode(200);
 });
 module.exports = { registerUser, AuthenticateUser, searchUser };

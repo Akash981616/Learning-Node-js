@@ -3,12 +3,20 @@ const color = require("color");
 const dotenv = require("dotenv");
 const ConnectDb = require("./config/ConnectDb");
 const userRoutes = require("./routes/userRoutes");
-
+const { logger } = require("./middleware/logger");
+const cors = require("cors");
+const app = express();
 dotenv.config();
 ConnectDb();
-const app = express();
+app.use(cors("*"));
+// built-in middleware to handle urlencoded data
+// in other words, form data:
+// ‘content-type: application/x-www-form-urlencoded’
+app.use(express.urlencoded({ extended: false }));
+app.use(logger);
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server Running on ${PORT}`);
 });
