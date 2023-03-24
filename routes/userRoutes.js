@@ -4,8 +4,12 @@ const {
   AuthenticateUser,
   searchUser,
 } = require("../controller/userController");
+const verifyRoles = require("../controller/verifyRoles");
 const verfifyAuth = require("../middleware/verifyAuth");
 const router = express.Router();
-router.route("/").get(verfifyAuth, searchUser).post(registerUser);
-router.route("/authenticate").post(verfifyAuth, AuthenticateUser);
+router
+  .route("/")
+  .get(verfifyAuth, verifyRoles(1999, 2002), searchUser)
+  .post(registerUser);
+router.route("/authenticate").post(AuthenticateUser);
 module.exports = router;

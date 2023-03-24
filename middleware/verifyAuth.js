@@ -9,13 +9,16 @@ const verfifyAuth = asyncHandler(async (req, res, next) => {
   ) {
     return res.sendStatus(401);
   }
-  //
+
   const token = req.headers.authorization.split(" ")[1];
   console.log(token);
   try {
     debugger;
     const decode = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded", decode);
+    const {
+      UserInfo: { roles },
+    } = decode;
+    req.roles = roles;
     next();
   } catch (error) {
     res.status(401);

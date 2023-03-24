@@ -14,9 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(409); //conflict
     throw new Error("User already exists");
   }
-
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log(hashedPassword);
   const newUser = {
     name: name,
     email: email,
@@ -52,7 +50,19 @@ const AuthenticateUser = asyncHandler(async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
 
   if (match) {
-    //res.json({ id: user._id, name: user.name, email: user.email, img: user.img })
+    const roles = Object.values(user.roles);
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      img: user.img,
+      accessToken: generateToken({
+        UserInfo: {
+          name: user.name,
+          roles: roles,
+        },
+      }),
+    });
     res.json(user).status(200);
   } else {
     res.status(401);
@@ -63,6 +73,6 @@ const AuthenticateUser = asyncHandler(async (req, res) => {
 //search User
 const searchUser = asyncHandler(async (req, res) => {
   const users = await User.find({});
-  res.send(users).statusCode(200);
+  res.send(users).status(200);
 });
 module.exports = { registerUser, AuthenticateUser, searchUser };
