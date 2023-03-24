@@ -4,11 +4,16 @@ const dotenv = require("dotenv");
 const ConnectDb = require("./config/ConnectDb");
 const userRoutes = require("./routes/userRoutes");
 const { logger } = require("./middleware/logger");
+const cookieParser = require("cookie-parser");
+
 const cors = require("cors");
+
 const app = express();
 dotenv.config();
 ConnectDb();
+
 app.use(cors("*"));
+app.use(cookieParser());
 // built-in middleware to handle urlencoded data
 // in other words, form data:
 // ‘content-type: application/x-www-form-urlencoded’

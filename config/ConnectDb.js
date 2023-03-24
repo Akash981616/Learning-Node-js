@@ -3,13 +3,17 @@ const color = require("color");
 const ConnectDb = async () => {
   try {
     await mongoose.set("strictQuery", false);
-    const conn = await mongoose.connect("mongodb://localhost:27017/LenDen", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const conn = await mongoose.connect(
+     "mongodb+srv://Akash:Autviz2022@cluster0.iqd7kzh.mongodb.net/?retryWrites=true&w=majority"
+     ,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
     console.log(`Mongo db connected ${conn.connection.host}`);
   } catch (error) {
-    console.log(eroor);
+    console.log(error);
   }
 };
 module.exports = ConnectDb;

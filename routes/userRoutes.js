@@ -12,4 +12,5 @@ router
   .get(verfifyAuth, verifyRoles(1999, 2002), searchUser)
   .post(registerUser);
 router.route("/authenticate").post(AuthenticateUser);
+router.route("refreshToken")
 module.exports = router;
