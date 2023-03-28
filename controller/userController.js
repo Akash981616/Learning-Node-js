@@ -38,6 +38,7 @@ const AuthenticateUser = asyncHandler(async (req, res) => {
   }
 });
 const registerUser = asyncHandler(async (req, res) => {
+  
   const { name, email, password, pic, roles } = req.body;
   if (!name || !email || !password) {
     res.status(400);
@@ -81,7 +82,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 const refreshToken = asyncHandler(async (req, res) => {
- 
+
  const cookie = req.cookies;
  if(!cookie?.jwt) return res.status(401).json({message:"Unauthorized"})
  const refreshTkn = cookie.jwt
@@ -92,7 +93,7 @@ const refreshToken = asyncHandler(async (req, res) => {
    const refreshToken = generateToken({ user }, "fasdfas", {
      expiresIn: "7d",
    });
-   res.status(201).json({ refreshToken });
+   res.status(201).json({ accessToken:refreshToken });
  }));
  
 });

@@ -3,6 +3,7 @@ const {
   registerUser,
   AuthenticateUser,
   searchUser,
+  refreshToken,
 } = require("../controller/userController");
 const verifyRoles = require("../controller/verifyRoles");
 const verfifyAuth = require("../middleware/verifyAuth");
@@ -12,5 +13,5 @@ router
   .get(verfifyAuth, verifyRoles(1999, 2002), searchUser)
   .post(registerUser);
 router.route("/authenticate").post(AuthenticateUser);
-router.route("refreshToken")
+router.route("/refreshToken").get(refreshToken);
 module.exports = router;
